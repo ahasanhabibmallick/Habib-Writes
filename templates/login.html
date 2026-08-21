@@ -1,16 +1,37 @@
 {% extends "base.html" %}
-
 {% load crispy_forms_tags %}
 
-{% block  content%}
+{% block seo %}
+<title>Login | Habib Writes</title>
+<meta name="description" content="Login to your Habib Writes account to manage your posts and participate in discussions.">
+{% endblock %}
 
-<h3 class='text-center'>Login</h3>
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card border-0 shadow-lg" style="border-radius: 15px;">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <h2 class="font-weight-bold">Welcome Back</h2>
+                    <p class="text-muted">Login to continue your journey with Habib Writes</p>
+                </div>
 
-<form action="{% url 'login' %}" method="POST" style="width:500px; margin:auto;">
+                <form action="{% url 'login' %}" method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
 
-    {% csrf_token %}
-    {{ form | crispy}}
-    <button types="submit" class="btn btn-primary">Login</button>
-</form>
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-sm">
+                            Sign In
+                        </button>
+                    </div>
+                </form>
 
-{% endblock  %}
+                <div class="text-center mt-4">
+                    <p class="mb-0 text-muted">Don't have an account? <a href="{% url 'register' %}" class="font-weight-bold">Join now</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

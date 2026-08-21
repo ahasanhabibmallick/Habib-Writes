@@ -1,29 +1,79 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 Error</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
- <link rel="stylesheet" href="{% static 'css/404style.css' %}">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Habib Writes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #004dcf;
+            --bg-color: #f0f2f5;
+            --text-color: #0f172a;
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .error-logo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            display: block;
+        }
+        .error-code {
+            font-size: 8rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-home {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,77,207,0.2);
+            color: white;
+        }
+    </style>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
-
 <body>
-  <section class="container">
-    <div class="error">
-      <h1>Uh Ohh 404!</h1>
-      <p>We couldn't find the page that you're looking for :(</p>
-      <div class="cta">
-        <a href="{% url 'home' %}" class="cta-back">Go Back</a>
-      </div>
+    <div class="container">
+        <a href="/" class="error-logo">Habib Writes</a>
+        <div class="error-code">404</div>
+        <h2 class="mb-4">Lost in the Digital World?</h2>
+        <p class="lead mb-5 text-muted">The page you're looking for has moved to another dimension or never existed.</p>
+        <a href="/" class="btn btn-home">Return to Homepage</a>
     </div>
-    <img src="https://raw.githubusercontent.com/smthari/404-page-using-html-css/Starter/Images/404.png" alt="404 image" class="hero-img" />
-  </section>
 </body>
-
 </html>
