@@ -19,17 +19,24 @@ def posts_by_category(request, category_id):
 def blogs(request,slug):
     single_blog = get_object_or_404(Blog,slug=slug, status='Published')
 
-    # Increment view count
-    single_blog.view_count += 1
-    single_blog.save()
+    # Increment view count safely (ignore errors on read-only filesystems like Vercel)
+    try:
+        single_blog.view_count += 1
+        single_blog.save()
+    except Exception:
+        pass
 
     if request.method == 'POST':
         comment = Comment()
         comment.user = request.user
         comment.blog = single_blog
         comment.comment = request.POST['comment']
-        comment.save()
-        return HttpResponseRedirect(request.path_info)
+        try:
+            comment.save()
+            return HttpResponseRedirect(request.path_info)
+        except Exception:
+            # Handle read-only error gracefully
+            return HttpResponse("Commenting is currently disabled on this demo version.")
 
     # Comments
     comments = Comment.objects.filter(blog=single_blog).order_by('-created_at')
