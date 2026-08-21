@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block seo %}
+<title>{{ single_blog.seo_title|default:single_blog.title }} | Habib Writes</title>
+<meta name="description" content="{{ single_blog.seo_description|default:single_blog.short_description|truncatechars:160 }}">
+<meta property="og:title" content="{{ single_blog.title }}">
+<meta property="og:description" content="{{ single_blog.short_description }}">
+<meta property="og:image" content="{% if 'http' in single_blog.featured_image.name %}{{ single_blog.featured_image.name }}{% else %}{{ single_blog.featured_image.url }}{% endif %}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ single_blog.title }}",
+  "image": "{% if 'http' in single_blog.featured_image.name %}{{ single_blog.featured_image.name }}{% else %}{{ single_blog.featured_image.url }}{% endif %}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ single_blog.author }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Habib Writes",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://habibwrites.vercel.app/static/images/logo.png"
+    }
+  },
+  "datePublished": "{{ single_blog.created_at|date:'c' }}",
+  "dateModified": "{{ single_blog.updated_at|date:'c' }}",
+  "description": "{{ single_blog.short_description }}"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <!-- Post content-->
+            <article class="blog-post-detail">
+                <!-- Post header-->
+                <header class="mb-5 text-center">
+                    <div class="mb-3">
+                        <span class="badge badge-primary text-uppercase px-3 py-2">{{ single_blog.category }}</span>
+                    </div>
+                    <h1 class="display-3 font-weight-bold mb-3">{{ single_blog.title }}</h1>
+                    <div class="text-muted mb-4">
+                        <img src="https://ui-avatars.com/api/?name={{ single_blog.author }}&background=random" class="rounded-circle mr-2" width="30">
+                        By <strong>{{ single_blog.author }}</strong> ·
+                        {{ single_blog.created_at|date:"F d, Y" }} ·
+                        <i class="fa fa-clock-o"></i> {{ single_blog.reading_time }} min read ·
+                        <i class="fa fa-eye"></i> {{ single_blog.view_count }} views
+                    </div>
+                </header>
+
+                <!-- Featured Image -->
+                <figure class="mb-5">
+                    <img class="img-fluid rounded shadow-lg w-100"
+                         src="{% if 'http' in single_blog.featured_image.name %}{{ single_blog.featured_image.name }}{% else %}{{ single_blog.featured_image.url }}{% endif %}"
+                         alt="{{ single_blog.title }}" />
+                </figure>
+
+                <!-- Post Content -->
+                <section class="mb-5 content-body" style="font-size: 1.2rem; line-height: 1.8; color: #333;">
+                    <div class="lead font-italic mb-4 border-left pl-4 py-2" style="border-width: 4px !important; border-color: #007bff !important;">
+                        {{ single_blog.short_description }}
+                    </div>
+
+                    <div class="article-body">
+                        {{ single_blog.blog_body|safe }}
+                    </div>
+                </section>
+
+                <!-- Tags -->
+                {% if single_blog.tags.all %}
+                <div class="mb-5">
+                    <h5 class="font-italic mb-3">Tags:</h5>
+                    {% for tag in single_blog.tags.all %}
+                    <a href="#" class="badge badge-light border text-muted p-2 mr-1">#{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <hr>
+
+                <!-- Related Articles -->
+                {% if related_articles %}
+                <section class="related-posts mt-5">
+                    <h3 class="font-weight-bold mb-4">Related in {{ single_blog.category }}</h3>
+                    <div class="row">
+                        {% for related in related_articles %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <img src="{% if 'http' in related.featured_image.name %}{{ related.featured_image.name }}{% else %}{{ related.featured_image.url }}{% endif %}"
+                                     class="card-img-top" style="height: 150px; object-fit: cover;">
+                                <div class="card-body p-3">
+                                    <h6 class="font-weight-bold">
+                                        <a href="{% url 'blogs' related.slug %}" class="text-dark">{{ related.title|truncatechars:50 }}</a>
+                                    </h6>
+                                    <small class="text-muted">{{ related.created_at|date:"M d" }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endif %}
+
+                <hr class="my-5">
+
+                <!-- Comments section-->
+                <section class="mb-5" id="comments">
+                    <h4 class="font-weight-bold mb-4">Discussions ({{ comments.count }})</h4>
+                    
+                    <div class="mb-5 bg-light p-4 rounded shadow-sm">
+                        {% if user.is_authenticated %}
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <textarea name="comment" class="form-control" rows="3" placeholder="Join the discussion..."></textarea>
+                                <button type="submit" class="btn btn-primary mt-3 px-4">Post Comment</button>
+                            </div>
+                        </form>
+                        {% else %}
+                        <div class="text-center py-3">
+                            <p>Please <a href="{% url 'login' %}" class="font-weight-bold">login</a> to participate in the discussion.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% for comment in comments %}
+                    <div class="media mb-4 p-3 bg-white rounded shadow-sm border-left" style="border-width: 3px !important; border-color: #eee !important;">
+                        <img class="d-flex mr-3 rounded-circle" src="https://ui-avatars.com/api/?name={{ comment.user }}&size=48" alt="...">
+                        <div class="media-body">
+                            <h6 class="mt-0 font-weight-bold">{{ comment.user }} <small class="text-muted font-weight-normal ml-2">{{ comment.created_at|timesince }} ago</small></h6>
+                            {{ comment.comment }}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center text-muted py-4">
+                        <p>No comments yet. Be the first to share your thoughts!</p>
+                    </div>
+                    {% endfor %}
+                </section>
+            </article>
+        </div>
+    </div>
+</div>
+{% endblock %}

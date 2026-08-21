@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}  
+{% for post in featured_posts  %}
+{% if forloop.first %}
+<div class="jumbotron p-4 p-md-5 text-white rounded bg-dark position-relative overflow-hidden"
+     style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url({% if 'http' in post.featured_image.name %}{{ post.featured_image.name }}{% else %}{{ post.featured_image.url }}{% endif %}); background-size: cover; background-position: center; min-height: 400px; display: flex; align-items: center;">
+    <div class="col-md-8 px-0">
+      <span class="badge badge-warning mb-2 text-uppercase">{{ post.category }}</span>
+      <h1 class="display-4 font-italic font-weight-bold">{{ post.title }}</h1>
+      <p class="lead my-3">{{ post.short_description | truncatewords:30 }}</p>
+      <p class="lead mb-0">
+        <a href="{% url 'blogs' post.slug %}" class="btn btn-outline-light font-weight-bold">Read Full Story</a>
+        <span class="ml-3 small"><i class="fa fa-clock-o"></i> {{ post.reading_time }} min read</span>
+      </p>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+<!-- Featured Posts Grid -->
+<div class="row mb-4">
+    {% for post in featured_posts %}
+    {% if not forloop.first %}
+    <div class="col-md-6">
+        <div class="card flex-md-row mb-4 box-shadow h-md-250 border-0 shadow-sm">
+            <div class="card-body d-flex flex-column align-items-start">
+                <strong class="d-inline-block mb-2 text-primary text-uppercase">{{ post.category }}</strong>
+                <h3 class="mb-0">
+                    <a class="text-dark" href="{% url 'blogs' post.slug %}">{{ post.title }}</a>
+                </h3>
+                <div class="mb-1 text-muted small">{{ post.created_at|date:"M d, Y" }} · {{ post.reading_time }} min read</div>
+                <p class="card-text mb-auto text-secondary">{{ post.short_description|truncatewords:15 }}</p>
+                <a href="{% url 'blogs' post.slug %}" class="btn btn-link p-0 mt-2">Continue reading</a>
+            </div>
+            <img class="card-img-right flex-auto d-none d-lg-block"
+                 src="{% if 'http' in post.featured_image.name %}{{ post.featured_image.name }}{% else %}{{ post.featured_image.url }}{% endif %}"
+                 alt="{{ post.title }}" style="width: 200px; height: 250px; object-fit: cover;">
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+<div class="row">
+    <!-- Main Content -->
+    <div class="col-md-8 blog-main">
+        <h3 class="pb-3 mb-4 font-italic border-bottom">
+            Recent Publications
+        </h3>
+
+        {% for post in posts %}
+        <div class="blog-post mb-5 pb-4 border-bottom">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{% if 'http' in post.featured_image.name %}{{ post.featured_image.name }}{% else %}{{ post.featured_image.url }}{% endif %}"
+                         class="img-fluid rounded shadow-sm" alt="{{ post.title }}">
+                </div>
+                <div class="col-md-8">
+                    <strong class="d-inline-block mb-2 text-success">{{ post.category }}</strong>
+                    <h2 class="blog-post-title mt-0">
+                        <a href="{% url 'blogs' post.slug %}" class="text-dark">{{ post.title }}</a>
+                    </h2>
+                    <p class="blog-post-meta text-muted small">
+                        {{ post.created_at|date:"F d, Y" }} by <a href="#">{{ post.author }}</a>
+                        · <i class="fa fa-eye"></i> {{ post.view_count }} views
+                    </p>
+                    <p>{{ post.short_description|truncatewords:35 }}</p>
+                    <a href="{% url 'blogs' post.slug %}" class="text-primary font-weight-bold">Read more →</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <nav class="blog-pagination">
+            <a class="btn btn-outline-primary" href="#">Older</a>
+            <a class="btn btn-outline-secondary disabled" href="#">Newer</a>
+        </nav>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="col-md-4 blog-sidebar">
+        <div class="p-3 mb-3 bg-light rounded shadow-sm">
+            <h4 class="font-italic">About Habib Writes</h4>
+            <p class="mb-0">Welcome to a professional space for deep insights into tech, science, and the digital economy. We provide well-researched editorial content for the curious mind.</p>
+        </div>
+
+        <div class="p-3">
+            <h4 class="font-italic">Categories</h4>
+            <div class="list-group list-group-flush">
+                {% for cat in categories %}
+                <a href="{% url 'posts_by_category' cat.id %}" class="list-group-item list-group-item-action bg-transparent border-0 px-0">
+                    {{ cat.category_name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="p-3">
+            <h4 class="font-italic">Follow Us</h4>
+            <ol class="list-unstyled">
+                <li><a href="#"><i class="fa-brands fa-github mr-2"></i>GitHub</a></li>
+                <li><a href="#"><i class="fa-brands fa-twitter mr-2"></i>Twitter</a></li>
+                <li><a href="#"><i class="fa-brands fa-instagram mr-2"></i>Instagram</a></li>
+            </ol>
+        </div>
+    </aside>
+</div>
+{% endblock %}

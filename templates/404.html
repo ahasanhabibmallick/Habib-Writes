@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 Error</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="{% static 'css/404style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <section class="container">
+    <div class="error">
+      <h1>Uh Ohh 404!</h1>
+      <p>We couldn't find the page that you're looking for :(</p>
+      <div class="cta">
+        <a href="{% url 'home' %}" class="cta-back">Go Back</a>
+      </div>
+    </div>
+    <img src="https://raw.githubusercontent.com/smthari/404-page-using-html-css/Starter/Images/404.png" alt="404 image" class="hero-img" />
+  </section>
+</body>
+
+</html>

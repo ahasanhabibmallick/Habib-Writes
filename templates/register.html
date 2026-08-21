@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+<h3 class='text-center'>Register</h3>
+<form action="{% url 'register' %}" method="POST" style="width:500px; margin:auto;">
+   {% csrf_token %}
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.errors }}
+    </div>
+    {% endif %}
+    {{ form|crispy }}
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+['id_password1', 'id_password2'].forEach(function(id) {
+    var input = document.getElementById(id);
+    
+    var wrapper = document.createElement('div');
+    wrapper.style.cssText = 'position:relative;';
+    input.parentNode.insertBefore(wrapper, input);
+    wrapper.appendChild(input);
+    
+    input.style.paddingRight = '40px';
+
+    var eye = document.createElement('i');
+    eye.className = 'fa-solid fa-eye';
+    eye.style.cssText = 'position:absolute; right:10px; top:12px; cursor:pointer; color:#0d6efd;';
+    
+    eye.addEventListener('click', function() {
+        if (input.type === 'password') {
+            input.type = 'text';
+            eye.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            eye.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    });
+    
+    wrapper.appendChild(eye);
+});
+</script>
+
+{% endblock  %}
